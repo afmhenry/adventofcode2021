@@ -40,16 +40,58 @@ def bingoWinner(filename):
                                 return int(move) * getSumOfBoard(boards[i])
 
 
+def bingoLoser(filename):
+    boards = []
+    boards_who_have_won = []
+    board = [[-1] * 5 for i in range(5)]
+
+    moves = ""
+    i = 0
+
+    with open(filename, encoding="latin1") as f:
+        for index, row in enumerate(csv.reader(f)):
+            if index == 0:
+                moves = row
+                k = 0
+            elif row:
+                for j, value in enumerate(str.split(row[0])):
+                    board[k][j] = int(value)
+                k += 1
+                if k == 4:
+                    boards.append(board)
+            else:
+                k = 0
+                board = [[-1] * 5 for i in range(5)]
+
+    for move in moves:
+        for i, board in enumerate(boards):
+            for j,  rows in enumerate(board):
+                for k,  cell in enumerate(rows):
+                    if cell == int(move):
+                        boards[i][j][k] = -1
+                        if sum(boards[i][j]) == -5:
+                            if i not in boards_who_have_won:
+                                boards_who_have_won.append(i)
+                            if len(boards_who_have_won) == len(boards):
+                                return int(move) * getSumOfBoard(boards[i])
+                        else:
+                            column = []
+                            for jj, rows_2 in enumerate(board):
+                                column.append(rows_2[k])
+                            if sum(column) == -5:
+                                if i not in boards_who_have_won:
+                                    boards_who_have_won.append(i)
+                                if len(boards_who_have_won) == len(boards):
+                                    return int(move) * getSumOfBoard(boards[i])
+
+
 def getSumOfBoard(board):
-    sum = 0
+    sum_of_board = 0
     for j, rows in enumerate(board):
         for k, cell in enumerate(rows):
             if cell >= 0:
-                sum += cell
-    return sum
-
-
-    return "foo"
+                sum_of_board += cell
+    return sum_of_board
 
 
 def countPositionWithAim(filename):
@@ -74,4 +116,5 @@ def countPositionWithAim(filename):
 
 assert(bingoWinner("dec4-mock.txt") == 4512)
 print(bingoWinner("dec4.txt"))
-
+assert(bingoLoser("dec4-mock.txt") == 1924)
+print(bingoLoser("dec4.txt"))
