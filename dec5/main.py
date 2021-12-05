@@ -2,8 +2,12 @@
 import csv
 
 
-def findDangerIntersects(filename):
-    board = [[0] * 1000 for i in range(1000)]
+def findDangerIntersects(filename, support_diagonal, print_board):
+    board_size = 1000
+    if print_board:
+        board_size = 10
+
+    board = [[0] * board_size for i in range(board_size)]
     points = {}
     path = []
 
@@ -17,7 +21,8 @@ def findDangerIntersects(filename):
             start_point_y = int(start[1])
             end_point_x = int(end[0])
             end_point_y = int(end[1])
-            if start_point_x == end_point_x or start_point_y == end_point_y:
+
+            if start_point_x == end_point_x or start_point_y == end_point_y or support_diagonal:
                 path = valuesBetween(start_point_x, start_point_y, end_point_x, end_point_y)
                 for i in range(len(path)):
                     point = path[i]
@@ -31,11 +36,14 @@ def findDangerIntersects(filename):
                         points.update({str(point): val + 1})
                         board[point[1]][point[0]] = val_board
             #else:
-                #print(index, start_point_x, start_point_y, end_point_x, end_point_y)
+                #print("Skip", index)
+                # print(index, start_point_x, start_point_y, end_point_x, end_point_y)
     counter = 0
     for point in points:
         if points[point] >= 2:
             counter += 1
+    if print_board:
+        printBoardNice(board)
     return counter
 
 
@@ -47,24 +55,58 @@ def printBoardNice(board):
 
 
 def valuesBetween(start_x, start_y, end_x, end_y):
+
     horiz = start_x - end_x
+    if horiz < 0:
+        j = 1
+    else:
+        j = -1
+
     vert = start_y - end_y
+    if vert < 0:
+        k = 1
+    else:
+        k = -1
     points = []
 
-    if horiz:
-        for i in range(abs(horiz) + 1):
-            if horiz > 0:
-                points.append([start_x - i, end_y])
-            else:
-                points.append([start_x + i, end_y])
+    if horiz and vert and (abs(horiz) == abs(vert)):
+        horiz -= j
+        vert -= k
+        while horiz != 0 and vert != 0:
+            horiz += j
+            vert += k
+            points.append(
+                [
+                    end_x + horiz,
+                    end_y + vert
+                ]
+            )
+    elif horiz:
+        horiz -= j
+        while horiz != 0:
+            horiz += j
+            points.append(
+                [
+                    end_x + horiz,
+                    end_y
+                ]
+            )
     elif vert:
-        for i in range(abs(vert) + 1):
-            if vert > 0:
-                points.append([start_x, start_y - i])
-            else:
-                points.append([start_x, start_y + i])
+        vert -= k
+        while vert != 0:
+            vert += k
+            points.append(
+                [
+                    start_x,
+                    end_y + vert
+                ]
+            )
+
     return points
 
 
-assert (findDangerIntersects("dec5-mock.txt") == 5)
-print(findDangerIntersects("dec5.txt"))
+assert(findDangerIntersects("dec5-mock.txt", False, True) == 5)
+print(findDangerIntersects("dec5.txt", False, False))
+
+assert (findDangerIntersects("dec5-mock.txt", True, True) == 12)
+print(findDangerIntersects("dec5.txt", True, False))
