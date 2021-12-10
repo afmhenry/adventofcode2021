@@ -28,30 +28,28 @@ def pathfinder(filename):
                     mapping[i][j] = int(value)
                     j += 1
                 i += 1
-
-        # print(mapping)
-        # printPretty(mapping)
         mins = []
         risk_level = 0
         for row in range(len(mapping)):
             for col in range(len(mapping[row])):
                 is_min = True
                 # first look left and right
-                if row - 1 in range(width):
-                    is_min = is_greater(mapping[row][col], mapping[row - 1][col])
-                if is_min and row + 1 in range(width):
-                    is_min = is_greater(mapping[row][col], mapping[row + 1][col])
-                # then look up and down
-                if is_min and col - 1 in range(height):
-                    is_min = is_greater(mapping[row][col], mapping[row][col - 1])
-                if is_min and col + 1 in range(height):
-                    is_min = is_greater(mapping[row][col], mapping[row][col + 1])
+                adjacent_position = [
+                    (row, col - 1),
+                    (row, col + 1),
+                    (row + 1, col),
+                    (row - 1, col)
+                ]
+
+                for pos in adjacent_position:
+                    if pos[0] in range(width) and pos[1] in range(height):
+                        is_min = is_min and is_greater(mapping[row][col], mapping[row - 1][col])
+
                 if is_min:
                     mins.append((row, col))
                     risk_level += mapping[row][col] + 1
 
         basins = []
-
         for (row, col) in mins:
             basin = [(row, col)]
             findBasin(row, col, basin, mapping, height, width)
