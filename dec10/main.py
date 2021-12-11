@@ -10,7 +10,7 @@ lock_keeper = [")", "]", "}", ">"]
 book_keeper = [3, 57, 1197, 25137]
 
 
-def corruptionHammer(filename):
+def corruptionHammer(filename, second_mode):
     with open(filename, encoding="latin1") as f:
         score_total = 0
         weird_scores = []
@@ -18,14 +18,13 @@ def corruptionHammer(filename):
             row = row.pop()
             score = 0
             score = findBreak(row)
-            print(index,score)
             score_total += score
             if score == 0:
                 score_new = calcNerdScore(fixIncomplete(row))
-                print(score_new)
                 weird_scores.append(score_new)
         weird_scores.sort()
-        return weird_scores[(round(len(weird_scores)/2))-1]
+
+        return weird_scores[(math.floor(len(weird_scores) / 2))] if second_mode else score_total
 
 
 def findBreak(row):
@@ -59,12 +58,12 @@ def calcNerdScore(chunk_fixes):
     score = 0
     for char in chunk_fixes:
         score *= 5
-        score += (lock_keeper.index(char)+1)
+        score += (lock_keeper.index(char) + 1)
     return score
 
-print (corruptionHammer("dec10-mock.txt"))
-print(corruptionHammer("dec10.txt"))
-# assert (corruptionHammer("dec11-mock.txt") == 1134)
 
-# print(corruptionHammer("dec11.txt"))
-# assert (corruptionHammer("dec11.txt") == 900900)
+assert(corruptionHammer("dec10-mock.txt", False) == 26397)
+assert(corruptionHammer("dec10.txt", False) == 345441)
+
+assert(corruptionHammer("dec10-mock.txt", True) == 288957)
+assert(corruptionHammer("dec10.txt", True) == 3235371166)

@@ -4,7 +4,7 @@ import math
 from threading import Thread
 
 
-def signals(filename):
+def signals(filename, second_mode):
     count = 0
     with open(filename, encoding="latin1") as f:
         zero = [["z" * 6], ["z" * 6]]
@@ -18,26 +18,14 @@ def signals(filename):
         seven = [["z" * 3], ["z" * 3]]
         eight = [["z" * 7], ["z" * 7]]
 
+        total = 0
+
         for index, row in enumerate(csv.reader(f, delimiter="|")):
             multiplier = 0
+            total += findEasy(row[1].split(" "), one, four, seven, eight)
+            findEasy(row[0].split(" "), one, four, seven, eight)
+
             parsed_row = row[0].split(" ") + row[1].split(" ")
-            for i, number in enumerate(parsed_row):
-                num = len(number)
-                number = sorted(number)
-
-                if num == 2:
-                    one[0] = number
-                    one[1] = ["c", "f"]
-                elif num == 4:
-                    four[0] = number
-                    four[1] = ["b", "c", "d", "f"]
-                elif num == 3:
-                    seven[0] = number
-                    seven[1] = ["a", "c", "f"]
-                elif num == 7:
-                    eight[0] = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-                    eight[1] = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-
             for i, number in enumerate(parsed_row):
                 num = len(number)
                 number = sorted(number)
@@ -72,7 +60,6 @@ def signals(filename):
             for entry in row[1].split(" "):
                 if entry:
                     if sorted(entry) == zero[0]:
-
                         string_count += "0"
                     elif sorted(entry) == one[0]:
                         string_count += "1"
@@ -93,8 +80,35 @@ def signals(filename):
                     elif sorted(entry) == nine[0]:
                         string_count += "9"
             count += int(string_count)
-    return count
+    return count if second_mode else total
 
 
-assert(signals("dec8-mock.txt") == 61229)
-print(signals("dec8.txt"))
+def findEasy(row, one, four, seven, eight):
+    one_four_seven_or_eight = 0
+    for i, number in enumerate(row):
+        num = len(number)
+        number = sorted(number)
+
+        if num == 2:
+            one[0] = number
+            one[1] = ["c", "f"]
+            one_four_seven_or_eight += 1
+        elif num == 4:
+            four[0] = number
+            four[1] = ["b", "c", "d", "f"]
+            one_four_seven_or_eight += 1
+        elif num == 3:
+            seven[0] = number
+            seven[1] = ["a", "c", "f"]
+            one_four_seven_or_eight += 1
+        elif num == 7:
+            eight[0] = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+            eight[1] = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+            one_four_seven_or_eight += 1
+    return one_four_seven_or_eight
+
+assert(signals("dec8-mock.txt", False) == 26)
+assert(signals("dec8.txt", False) == 239)
+
+assert(signals("dec8-mock.txt", True) == 61229)
+assert(signals("dec8.txt", True) == 946346)

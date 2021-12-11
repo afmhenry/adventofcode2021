@@ -10,7 +10,7 @@ def is_greater(val, y):
     return False if val >= y else True
 
 
-def pathfinder(filename):
+def pathfinder(filename, second_mode):
     count = 0
     with open(filename, encoding="latin1") as f:
         height = len(f.readline()) - 1
@@ -30,6 +30,7 @@ def pathfinder(filename):
                 i += 1
         mins = []
         risk_level = 0
+
         for row in range(len(mapping)):
             for col in range(len(mapping[row])):
                 is_min = True
@@ -60,7 +61,7 @@ def pathfinder(filename):
         for i in range(3):
             result *= basins[len(basins) - (i + 1)]
 
-        return result
+        return result if second_mode else risk_level
 
 
 def findBasin(row, col, basin, mapping, height, width):
@@ -86,8 +87,8 @@ def printPretty(two_dim_array):
         print(row)
 
 
-print(pathfinder("dec9-mock.txt"))
-assert (pathfinder("dec9-mock.txt") == 1134)
+assert(pathfinder("dec9-mock.txt", False) == 15)
+assert (pathfinder("dec9.txt", False) == 439)
 
-print(pathfinder("dec9.txt"))
-assert (pathfinder("dec9.txt") == 900900)
+assert (pathfinder("dec9-mock.txt", True) == 1134)
+assert (pathfinder("dec9.txt", True) == 900900)
