@@ -64,7 +64,7 @@ def calcNerdScore(chunk_fixes):
 
 print (corruptionHammer("dec10-mock.txt"))
 print(corruptionHammer("dec10.txt"))
-# assert (corruptionHammer("dec10-mock.txt") == 1134)
+# assert (corruptionHammer("dec11-mock.txt") == 1134)
 
-# print(corruptionHammer("dec10.txt"))
-# assert (corruptionHammer("dec10.txt") == 900900)
+# print(corruptionHammer("dec11.txt"))
+# assert (corruptionHammer("dec11.txt") == 900900)
