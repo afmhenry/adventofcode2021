@@ -23,7 +23,7 @@ def octopusFlash(filename, days, second_challenge_mode):
             for j, num in enumerate(entry):
                 if num > 9 and [i, j] not in expanded:
                     expanded.append([i, j])
-                    propogateFlash(i, j, mapping, expanded, height, width)
+                    propagateFlash(i, j, mapping, expanded, height, width)
         expanded = []
 
         flash_this_iter = countFlashesAndReset(mapping, 0)
