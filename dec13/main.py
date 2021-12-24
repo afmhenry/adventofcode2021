@@ -44,7 +44,7 @@ def foldPaper(filename, second_challenge_mode):
     for instruction in instructions:
         #print(instruction)
         dots, height, width = transpose(instruction, dots, width, height)
-        printPretty(dots)
+    printPretty(dots)
 
     dot_count = 0
 
