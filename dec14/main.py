@@ -98,11 +98,11 @@ def replacedPairsFAST(base, translations):
     return new_base
 
 
-#assert(evaluatePairs("dec14-mock.txt", 10, False) == 1588)
+#assert(evaluatePairs("dec16-mock.txt", 10, False) == 1588)
 print(evaluatePairs("dec14-mock.txt", 1, True))
 
 
-#print(evaluatePairs("dec14-mock.txt", 40, False))
+#print(evaluatePairs("dec16-mock.txt", 40, False))
 
 # print (findPath("dec15.txt", False) == 1591)
 
